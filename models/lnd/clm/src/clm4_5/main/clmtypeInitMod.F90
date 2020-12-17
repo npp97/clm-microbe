@@ -334,6 +334,13 @@ contains
 #if (defined MICROBE)
      !column microbial variables at column level
      call init_column_microbe_type(begc, endc, cmic)
+     
+     if (use_c13) then
+    call init_column_microbe_type(begc, endc, cmicc13)
+     end if
+     if (use_c14) then
+    call init_column_microbe_type(begc, endc, cmicc14)
+     end if    
 #endif
 
     ! column nitrogen flux variables at column level
@@ -382,6 +389,12 @@ contains
 #if (defined MICROBE)
     ! gridcell: ch4 variables
     call init_gridcell_microbe_type(begg, endg, gmic)
+!	if(use_c13) then
+!	call init_gridcell_microbe_type(begg, endg, gmicc13)
+!	end if
+!	if(use_c14) then
+!	call init_gridcell_microbe_type(begg, endg, gmicc14)
+!	end if
 #endif
 
   end subroutine initClmtype
@@ -4472,6 +4485,9 @@ contains
     allocate(cmic%caces_prod(beg:end,1:nlevgrnd))
     allocate(cmic%caces_unsat_prod(beg:end,1:nlevgrnd))
     allocate(cmic%caces_sat_prod(beg:end,1:nlevgrnd))
+    allocate(cmic%caces_prod_h2(beg:end,1:nlevgrnd))
+    allocate(cmic%caces_unsat_prod_h2(beg:end,1:nlevgrnd))
+    allocate(cmic%caces_sat_prod_h2(beg:end,1:nlevgrnd))
 
 !    allocate(cmic%ch4_dfsat_flux(beg:end))
 !    allocate(cmic%zwt_ch4_unsat(beg:end))
@@ -4667,7 +4683,10 @@ contains
     cmic%caces_prod(beg:end,1:nlevgrnd) = 0_r8
     cmic%caces_unsat_prod(beg:end,1:nlevgrnd) = 0_r8
     cmic%caces_sat_prod(beg:end,1:nlevgrnd) = 0_r8
-
+    cmic%caces_prod_h2(beg:end,1:nlevgrnd) = 0_r8
+    cmic%caces_unsat_prod_h2(beg:end,1:nlevgrnd) = 0_r8
+    cmic%caces_sat_prod_h2(beg:end,1:nlevgrnd) = 0_r8
+    
 !    cmic%ch4_dfsat_flux(beg:end) = nan
 !    cmic%zwt_ch4_unsat(beg:end) = nan
     cmic%fsat_pre(beg:end) = spval ! To detect first time-step

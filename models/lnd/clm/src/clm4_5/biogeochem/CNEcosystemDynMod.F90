@@ -106,11 +106,12 @@ contains
     use CNFireMod            , only: CNFireArea, CNFireFluxes
     use CNCStateUpdate3Mod   , only: CStateUpdate3
     use CNNStateUpdate3Mod   , only: NStateUpdate3
+    use CNCStateUpdate4Mod   , only: CStateUpdate4				! methane module
     use CNPrecisionControlMod, only: CNPrecisionControl
     use CNVegStructUpdateMod , only: CNVegStructUpdate
     use CNAnnualUpdateMod    , only: CNAnnualUpdate
     use CNSummaryMod         , only: CSummary, NSummary
-    use CNCIsoFluxMod        , only: CIsoFlux1, CIsoFlux2, CIsoFlux2h, CIsoFlux3
+    use CNCIsoFluxMod        , only: CIsoFlux1, CIsoFlux2, CIsoFlux2h, CIsoFlux3, CIsoFlux4
     use CNC14DecayMod        , only: C14Decay, C14BombSpike
     use pftdynMod              , only: CNHarvest
     use CNWoodProductsMod      , only: CNWoodProducts
@@ -270,6 +271,16 @@ contains
        if ( use_c13 ) call CStateUpdate3(num_soilc, filter_soilc, num_soilp, filter_soilp, 'c13')
 
        if ( use_c14 ) call CStateUpdate3(num_soilc, filter_soilc, num_soilp, filter_soilp, 'c14')
+
+#if(defined MICROBE)
+       if ( use_c13 ) call CIsoFlux4(num_soilc, filter_soilc, 'c13')
+
+       if ( use_c14 ) call CIsoFlux4(num_soilc, filter_soilc, 'c14')
+       
+       if ( use_c13 ) call CStateUpdate4(num_soilc, filter_soilc, num_soilp, filter_soilp, 'c13')
+
+       if ( use_c14 ) call CStateUpdate4(num_soilc, filter_soilc, num_soilp, filter_soilp, 'c14')
+#endif
 
        if ( use_c14 ) call C14Decay(num_soilc, filter_soilc, num_soilp, filter_soilp)
 

@@ -1,8 +1,13 @@
-1. git clone case
+1. git clone model
 git clone https://github.com/email-clm/clm-microbe.git clm-microbe 
 
+if you want to clone an older vesion
+git clone https://github.com/email-clm/clm-microbe.git clm-microbe
+cd clm-microbe
+git reset --hard 5d87124 (head on May 16th, 2017, could be head of any other commits)
+
 2. Create a new case
-./create_newcase --case test --mach peony --compset ICN --res CLM_USRDAT -compiler gnu
+./create_newcase --case test --mach peony --compset I1850CLM45CN --res CLM_USRDAT -compiler gnu
 
 The case name can include path, then the case will be created to other directory
 The machine name should be your local machine name, but the configuration should be set up in the machine files
@@ -20,7 +25,7 @@ L56 ndays -> nyears
 L59, change the number for the exact duratin of simulation
 L70, optional (for expert only), for restarting points
 L79, optional (for expert only), for resubmission
-L288 & 230, if using different machines, it might needs modifications
+L288 & 290, if using different machines, it might needs modifications
 L299, default is true, change to false if you do not want to archive
 L302, optional (for expert only)
 L328, CLM1PT
@@ -42,6 +47,18 @@ hist_nhtfrq = -24
  stream_fldfilename_ndep = '/storage/projects/inputdata/lnd/clm2/ndepdata/fndep_clm_hist_simyr1849-2006_1.9x2.5_c100428.nc'
 /
 
+Create surface and dynamic PFT file if needed.
+NUMLON, order of cell along longitudal direction # notice the resolution of the spatial data when determining these numbers
+NUMLAT, order of cell along latidual direction # notice the resolution of the spatial data when determining these numbers
+
+ncks -d lsmlon,NUMLON,NUMLON -d lsmlat,NUMLAT, NUMLAT /storage/projects/inputdata/lnd/clm2/surfdata/surfdata_360x720cru_simyr1850_c130415.nc surfdata_1x1pt_%case%_simyr1850.nc
+ncks -d lsmlon,267,267 -d lsmlat,275,275 /storage/projects/inputdata/lnd/clm2/surfdata/surfdata_360x720cru_simyr1850_c130415.nc surfdata_1x1pt_Sanjiang_CN-SJ1_I1850CLM45CN_simyr1850.nc
+for Sanjiang station (N 47.51, E 133.5)
+
+dyn file
+ncks -d lsmlon,267,267 -d lsmlat,275,275 /storage/projects/inputdata/lnd/clm2/surfdata/surfdata.pftdyn_0.5x0.5_simyr1850-2010.nc surfdata.pftdyn_1x1pt_%case%_simry1850-2010.nc
+ncks -d lsmlon,267,267 -d lsmlat,275,275 /storage/projects/inputdata/lnd/clm2/surfdata/surfdata.pftdyn_0.5x0.5_simyr1850-2010.nc surfdata.pftdyn_1x1pt_Sanjiang_CN-SJ1_simry1850-2010.nc
+
 user_nl_datm
 
 6. get data or parameter ready
@@ -55,3 +72,12 @@ In the case folder, ./casename.build
 
 9. run case
 In the case folder, ./casename.run
+
+
+other useful information: 
+Getting your Mac ready for netCDF
+http://mazamascience.com/WorkingWithData/?p=1474
+
+CESM: Building CESM 1.2 on Mac OSX
+http://hannahlab.org/cesm-building-cesm-1-2-on-mac-osx/
+https://github.com/fmyuan/E3SM/wiki/ALM-on-Mac-OSX:-environments,-building,-and-running
